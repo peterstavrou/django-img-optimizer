@@ -125,7 +125,7 @@ The single quotes `'` around `"images/` indicates that it is a string.
 
 `|add:'.jpg"'` adds `.jpg"` to the string, resulting in: `src="images/logo.jpg"`
 
-## AVIF Image Support
+### AVIF Image Support
 
 django_img_optimizer utilizes `python-pillow`, which currently lacks official support for AVIF files.
 
