@@ -127,6 +127,6 @@ The single quotes `'` around `"images/` indicates that it is a string.
 
 ## AVIF Image Support
 
-django_img_optimizer utilizes `python-pillow`, which currently lacks official support for AVIF files.
-
-However, a [pull request](https://github.com/python-pillow/Pillow/pull/5201) is in progress to enable this support.
+django_img_optimizer utilizes `python-pillow` which currently lacks official support for AVIF files. 
+However, a <a href="https://github.com/python-pillow/Pillow/pull/5201" target="_blank">pull request</a>
+ is in progress to enable this support.
