@@ -1,0 +1,14 @@
+{% load image_optimizer %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Optimizer Template Tag Test</title>
+</head>
+<body>
+    {% optimized_image 'loading="lazy"' 'decoding="async"' 'src="images/logo.jpg"' 'alt="Logo"' 'class="img-fluid"' %}
+    {% optimized_image 'loading="lazy"' 'decoding="async"' 'src="images/small.jpg"' 'alt="Logo Small"' %}
+</body>
+</html>

@@ -1,0 +1,25 @@
+on:
+  release:
+    types: [published]
+jobs:
+  pypi-publish:
+    name: Upload release to PyPI
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+      - name: Install Requirements
+        run: |
+          python3 -m pip install -r requirements.txt
+      - name: Run Tests
+        run: |
+          python3 -m pytest
+      - name: Build Package
+        run: |
+          python3 -m pip install --upgrade pip build
+          python3 -m build
+      - name: Publish package distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
