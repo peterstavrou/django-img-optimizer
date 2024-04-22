@@ -19,7 +19,7 @@ Add django_img_optimizer to `INSTALLED_APPS` in your projects `settings.py` file
     ]
 ```
 
-Set `OPTIMIZE_IMAGE_ROOT` to the top-level folder that contains the images that you would like to optimize. django_img_optimizer will search through all subfolders for the specified image types.
+Set `OPTIMIZE_IMAGE_ROOT` to the top-level folder containing the images that you would like to optimize. django_img_optimizer will search through all subfolders for the specified image types.
 
 **Example:**
 
@@ -129,4 +129,4 @@ The single quotes `'` around `"images/` indicates that it is a string.
 
 django_img_optimizer utilizes `python-pillow`, which currently lacks official support for AVIF files.
 
-However, there is a [pull request](https://github.com/python-pillow/Pillow/pull/5201) in progress to enable this support.
+However, a [pull request](https://github.com/python-pillow/Pillow/pull/5201) is in progress to enable this support.
