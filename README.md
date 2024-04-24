@@ -1,6 +1,6 @@
 # Django Image Optimizer
 
-[![pytest](https://github.com/peterstavrou/django-img-optimizer/actions/workflows/build.yml/badge.svg)](https://github.com/peterstavrou/django-img-optimizer/actions) &nbsp; [![pypi](https://img.shields.io/badge/dynamic/toml?url=https://raw.githubusercontent.com/peterstavrou/django-img-optimizer/main/pyproject.toml&prefix=v&query=project.version&label=pypi&color=blue)](https://pypi.org/project/django-img-optimizer/1.1/)  &nbsp; [![mit-license](https://img.shields.io/badge/license-MIT-9d9d9d)](https://github.com/peterstavrou/django-img-optimizer/blob/main/LICENSE)
+[![pytest](https://github.com/peterstavrou/django-img-optimizer/actions/workflows/build.yml/badge.svg)](https://github.com/peterstavrou/django-img-optimizer/actions) &nbsp; [![pypi](https://img.shields.io/badge/dynamic/toml?url=https://raw.githubusercontent.com/peterstavrou/django-img-optimizer/main/pyproject.toml&prefix=v&query=project.version&label=pypi&color=blue)](https://pypi.org/project/django-img-optimizer/1.2/)  &nbsp; [![mit-license](https://img.shields.io/badge/license-MIT-9d9d9d)](https://github.com/peterstavrou/django-img-optimizer/blob/main/LICENSE)
 
 Django Image Optimizer converts images to WebP format while allowing you to specify the quality of the image. Optimized images that are larger than their originals are automatically deleted.
 
@@ -93,6 +93,14 @@ This will render:
     </picture>
 
 Pass in any `<img>` attribute by wrapping it between  single quotes `'`.
+
+You can use `auto` to generated the value of the `alt` and `title` attribute automatically using its filename.
+
+**Example:**
+
+    {% optimized_image 'src="images/logo-auto-attributes.jpg"' 'alt="auto"' 'title="auto"' %}
+
+This will render `alt="Logo Auto Attributes"` and `title="Logo Auto Attributes"`.
 
 You can use variables with the `optimize_image` template tag that have been passed through `include` by using the built-in Django filter <a href="https://docs.djangoproject.com/en/5.0/ref/templates/builtins/#add" target="_blank">add</a>.
 

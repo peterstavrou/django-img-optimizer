@@ -17,7 +17,6 @@ def optimized_image(*args):
     """
     attributes = ' '.join(args)
 
-
     # Get src attribute value
     match_src = re.search(r'src="([^"]+)"', attributes)
     # print(match_src)
@@ -39,6 +38,11 @@ def optimized_image(*args):
         optimized_image_webp = f'<source srcset="{optimized_image_static_src}" type="image/webp">'
     else:
         optimized_image_webp = ''
+
+    # Create alt and/or title attribute using image name
+    if 'alt="auto"' in attributes_output or 'title="auto"' in attributes_output:
+        image_name = relative_image_path_without_extension.split('/')[-1].replace('-', ' ').title()
+        attributes_output = attributes_output.replace('="auto"', f'="{image_name}"')
 
     # Create html picture tag
     picture_tag = f'''

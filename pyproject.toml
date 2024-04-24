@@ -1,6 +1,6 @@
 [project]
 name = "django-img-optimizer"
-version = "1.1"
+version = "1.2"
 description = "Image optimizer for Django."
 readme = "README.md"
 requires-python = ">=3.8"

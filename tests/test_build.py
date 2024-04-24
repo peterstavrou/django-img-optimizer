@@ -32,8 +32,8 @@ def test_raise_exception_no_OPTIMIZE_IMAGE_root_set_in_settings():
         optimize_images()
 
 def test_optimize_all_images(settings_config):
-
         optimize_images()
+
         # Assert webp image optimization
         assert os.path.exists(f'{settings.OPTIMIZE_IMAGE_ROOT}/logo.webp')
 
@@ -46,7 +46,7 @@ def test_optimize_all_images(settings_config):
         # Assert that the delete_if_optimized_image_is_smaller_or_equal function works
         assert not os.path.exists(f'{settings.OPTIMIZE_IMAGE_ROOT}/small.webp')
 
-def test_no_optimized_webp_image(client):
+def test_optimized_image_template_tag(client):
     response = client.get('/')
 
     # Assert that the the template tag created a html picture tag containing the optimized webp image
@@ -57,6 +57,15 @@ def test_no_optimized_webp_image(client):
     </picture>
     '''
     assert optimized_image in response.content.decode()
+
+    # Assert that the the template tag created an alt and title attribute from the image name
+    optimized_image_with_auto_alt_and_title_attributes = '''
+    <picture>
+        <source srcset="/static/images/logo-auto-attributes.webp" type="image/webp">
+        <img loading="lazy" decoding="async" src="/static/images/logo-auto-attributes.jpg" alt="Logo Auto Attributes" title="Logo Auto Attributes">
+    </picture>
+    '''
+    assert optimized_image_with_auto_alt_and_title_attributes in response.content.decode()
 
     # Assert that the template tag created an html picture tag that does not contain a webp image as the optimized size is larger than the original
     not_optimized_image = '''
