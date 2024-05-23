@@ -19,8 +19,6 @@ def optimized_image(*args):
 
     # Get src attribute value
     match_src = re.search(r'src="([^"]+)"', attributes)
-    # print(match_src)
-    # print('************')
     relative_image_path = match_src.group(1) if match_src.group(1) is not None else "src could not be found"
 
     # Get django static path
