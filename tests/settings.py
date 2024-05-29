@@ -1,7 +1,5 @@
 import os
 
-SECRET_KEY = 'django-insecure-ra=u24w+nej0os)il@$u8_t32+0=2lm@g9wben3fszf@09=mt@'
-
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 INSTALLED_APPS = [
