@@ -129,7 +129,6 @@ def test_optimize_all_images(settings_config):
 def test_optimized_image_template_tag(client, setup_optimized_images):
     response = client.get('/')
     content = response.content.decode()
-    print(content)
 
     # Assert that the response returned successfully
     assert response.status_code == 200
