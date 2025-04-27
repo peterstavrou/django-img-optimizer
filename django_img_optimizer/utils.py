@@ -1,7 +1,8 @@
 from django.conf import settings
 from glob import iglob
-import os
+from pathlib import Path
 from PIL import Image
+
 
 def get_settings():
     """ Retrieves the optimization settings from the Django settings """
@@ -27,23 +28,19 @@ def get_settings():
 def delete_optimized_images():
     """ Delete all optimized images. """
     image_optimizer_settings = get_settings()
-    OPTIMIZE_IMAGE_ROOT = image_optimizer_settings.get('OPTIMIZE_IMAGE_ROOT')
+    OPTIMIZE_IMAGE_ROOT = Path(image_optimizer_settings.get('OPTIMIZE_IMAGE_ROOT'))
 
     for file in iglob(f'{OPTIMIZE_IMAGE_ROOT}/**', recursive=True):
-        if os.path.isfile(file):
-            file_extension = file.rsplit('.', 1)[-1]
-            if file_extension in ['webp']:
-                os.remove(file)
+        file_path = Path(file)
+        if file_path.is_file() and file_path.suffix in ['.webp']:
+            file_path.unlink()
 
     print('Optimized images have been deleted.')
 
-def delete_if_optimized_image_is_larger(original_file: str, output_file: str):
-    """ Compares the original image to the optimized image and deletes it they it is larger in size. """
-    file_size = os.path.getsize(original_file)
-    output_file_size = os.path.getsize(output_file)
-
-    if output_file_size >= file_size:
-        os.remove(output_file)
+def delete_if_optimized_image_is_larger(original_file: Path, output_file: Path):
+    """ Compares the original image to the optimized image and deletes it if it is larger in size. """
+    if output_file.stat().st_size >= original_file.stat().st_size:
+        output_file.unlink()
 
 def optimize_images():
     """
@@ -51,23 +48,24 @@ def optimize_images():
     Deletes the optimized image if it is larger than the original.
     """
     image_optimizer_settings = get_settings()
-    OPTIMIZE_IMAGE_ROOT = image_optimizer_settings.get('OPTIMIZE_IMAGE_ROOT')
+    OPTIMIZE_IMAGE_ROOT = Path(image_optimizer_settings.get('OPTIMIZE_IMAGE_ROOT'))
     OPTIMIZE_IMAGE_TYPES = image_optimizer_settings.get('OPTIMIZE_IMAGE_TYPES')
     OPTIMIZE_IMAGE_QUALITY = image_optimizer_settings.get('OPTIMIZE_IMAGE_QUALITY')
     OPTIMIZE_IMAGE_EXCLUDED_FOLDERS = image_optimizer_settings.get('OPTIMIZE_IMAGE_EXCLUDED_FOLDERS')
 
     for file in iglob(f'{OPTIMIZE_IMAGE_ROOT}/**', recursive=True):
-        folder_name = os.path.basename(os.path.dirname(file))
+        file_path = Path(file)
+        folder_name = file_path.parent.name
 
-        if os.path.isfile(file) and (folder_name not in OPTIMIZE_IMAGE_EXCLUDED_FOLDERS):
-            split_file_name = file.rsplit('.', 1)
-            file_path_and_name = split_file_name[0]
-            file_extension = split_file_name[-1]
+        if file_path.is_file() and folder_name not in OPTIMIZE_IMAGE_EXCLUDED_FOLDERS:
+            file_extension = file_path.suffix.lstrip('.')
 
             if file_extension in OPTIMIZE_IMAGE_TYPES:
-                image = Image.open(file)
-                output_file = f'{file_path_and_name}.webp'
-                image.save(output_file, 'webp', quality=OPTIMIZE_IMAGE_QUALITY)
-                delete_if_optimized_image_is_larger(file, output_file)
+                image = Image.open(file_path)
+
+                # Create and save WebP
+                webp_output_file = file_path.with_suffix('.webp')
+                image.save(webp_output_file, 'webp', quality=OPTIMIZE_IMAGE_QUALITY)
+                delete_if_optimized_image_is_larger(file_path, webp_output_file)
 
     print('Image optimization complete.')
