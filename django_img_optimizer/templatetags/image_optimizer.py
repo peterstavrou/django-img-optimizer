@@ -32,7 +32,7 @@ def optimized_image(**attrs):
     # Replace src attribute with Django static URL
     attrs['src'] = image_static_src
 
-    # Check if optimized .webp version exists
+    # Check if optimized WebP image exists
     optimized_image_webp_absolute_path = find(f'{relative_image_path_without_extension}.webp')
 
     if optimized_image_webp_absolute_path:
