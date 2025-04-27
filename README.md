@@ -2,7 +2,7 @@
 
 [![pytest](https://github.com/peterstavrou/django-img-optimizer/actions/workflows/build.yml/badge.svg)](https://github.com/peterstavrou/django-img-optimizer/actions) &nbsp; [![pypi](https://img.shields.io/badge/dynamic/toml?url=https://raw.githubusercontent.com/peterstavrou/django-img-optimizer/main/pyproject.toml&prefix=v&query=project.version&label=pypi&color=blue)](https://pypi.org/project/django-img-optimizer/1.3/)  &nbsp; [![mit-license](https://img.shields.io/badge/license-MIT-9d9d9d)](https://github.com/peterstavrou/django-img-optimizer/blob/main/LICENSE)
 
-Django Image Optimizer converts images to WebP format while allowing you to specify the quality of the image. Optimized images that are larger than their originals are automatically deleted.
+**Django Image Optimizer** converts images to WebP format while allowing you to specify the quality of the image. Optimized images that are larger than their originals are automatically deleted.
 
 ## Installation
     pip install django-img-optimizer
@@ -23,16 +23,18 @@ Set `OPTIMIZE_IMAGE_ROOT` to the top-level folder containing the images that you
 
 **Example:**
 
-If you have a folder inside static called images:
+If you have a folder inside `static` called `images`:
 
-    OPTIMIZE_IMAGE_ROOT = os.path.join(PROJECT_DIR, 'static', 'images')
+    OPTIMIZE_IMAGE_ROOT = PROJECT_DIR / "static" / "images"
+
+**Note:** The path above uses a Path object (from `pathlib import Path`).
 
 ---
 ### Optional Settings
 
 #### Image Quality
 
-`OPTIMIZE_IMAGE_QUALITY` specifies the optimization image quality on a scale from 0 (worst) to 100 (best). The lower the quality, the smaller the size of the file.
+`OPTIMIZE_IMAGE_QUALITY` specifies the optimization image quality on a scale from 0 (lowest) to 100 (best). The lower the quality, the smaller the size of the file.
 
 Default is `100`.
 
@@ -83,7 +85,7 @@ Load the optimized images in Django templates:
 
     {% load image_optimizer %}
 
-    {% optimized_image 'loading="lazy"' 'decoding="async"' 'src="images/logo.jpg"' 'alt="Logo"' 'class="img-fluid"' %}
+    {% optimized_image loading="lazy" decoding="async" src="images/logo.jpg" alt="Logo" class="img-fluid" %}
 
 This will render:
 
@@ -92,13 +94,11 @@ This will render:
         <img loading="lazy" decoding="async" src="/static/images/logo.jpg" alt="Logo" class="img-fluid">
     </picture>
 
-Pass in any `<img>` attribute by wrapping it between  single quotes `'`.
-
 You can use `auto` to generated the value of the `alt` and `title` attribute automatically using its filename.
 
 **Example:**
 
-    {% optimized_image 'src="images/logo-auto-attributes.jpg"' 'alt="auto"' 'title="auto"' %}
+    {% optimized_image loading="lazy" decoding="async" src="images/logo-auto-attributes.jpg" alt="auto" title="auto" %}
 
 This will render `alt="Logo Auto Attributes"` and `title="Logo Auto Attributes"`.
 
@@ -108,12 +108,12 @@ You can use variables with the `optimize_image` template tag that have been pass
 
 index.html
 
-    {% include 'partials/include.html' with image_name='logo'  %}
+    {% include 'partials/include.html' with image_name='logo' %}
 
 include.html
 
-    {% with src='"images/'|add:image_name|add:'.jpg"' %}
-        {% optimized_image 'src='|add:src %}
+    {% with src="images/"|add:image_name|add:".jpg" %}
+        {% optimized_image src=src %}
     {% endwith %}
 
 This will render:
@@ -125,13 +125,12 @@ This will render:
 
 **Code Breakdown:**
 
-src is set to: `src='"images/'`
+src is set to: `src="images/`
 
-The single quotes `'` around `"images/` indicates that it is a string.
 
 `|add:image_name`  adds the `image_name` variable to the string, resulting in: `src="images/logo`
 
-`|add:'.jpg"'` adds `.jpg"` to the string, resulting in: `src="images/logo.jpg"`
+`|add:".jpg"` adds `.jpg"` to the string, resulting in: `src="images/logo.jpg"`
 
 ## AVIF Image Support
 
