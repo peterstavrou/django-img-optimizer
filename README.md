@@ -131,9 +131,3 @@ src is set to: `src="images/`
 `|add:image_name`  adds the `image_name` variable to the string, resulting in: `src="images/logo`
 
 `|add:".jpg"` adds `.jpg"` to the string, resulting in: `src="images/logo.jpg"`
-
-## AVIF Image Support
-
-django_img_optimizer utilizes `python-pillow` which currently lacks official support for AVIF files.
-However, a <a href="https://github.com/python-pillow/Pillow/pull/5201" target="_blank">pull request</a>
- is in progress to enable this.

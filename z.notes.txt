@@ -1,1 +1,0 @@
-Or maybe add a fallback <img> if no optimized image is found?
