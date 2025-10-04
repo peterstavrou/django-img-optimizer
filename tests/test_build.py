@@ -159,6 +159,15 @@ def test_optimized_image_template_tag(client, setup_optimized_images):
     # Assert <img> fallback exists for small.jpg
     assert '<img loading="lazy" decoding="async" src="/static/images/small.jpg" alt="Logo Small">' in content
 
+    # === Tests converting underscores to hyphens  ===
+
+    # Hyphenated versions should exist in the rendered HTML
+    assert 'data-bs-toggle="modal"' in content
+    assert 'data-bs-target="#exampleModal"' in content
+
+    # Original underscore attributes should not appear in the rendered HTML
+    assert 'data_bs_toggle' not in content
+    assert 'data_bs_target' not in content
 
 # === Tests for Deleting Optimized Images ===
 

@@ -48,8 +48,10 @@ def optimized_image(**attrs):
             if attrs.get(key) == 'auto':
                 attrs[key] = image_name
 
-    # Build HTML attributes for the <img> tag
-    attributes_output = ' '.join(f'{key}="{value}"' for key, value in attrs.items())
+    # Build HTML attributes for the <img> tag (converts underscores in keys to hyphens for HTML)
+    attributes_output = ' '.join(
+        f'{key.replace("_", "-")}="{value}"' for key, value in attrs.items()
+    )
 
     # Build full <picture> tag
     picture_tag = f'''
