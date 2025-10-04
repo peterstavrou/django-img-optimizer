@@ -131,3 +131,21 @@ src is set to: `src="images/`
 `|add:image_name`  adds the `image_name` variable to the string, resulting in: `src="images/logo`
 
 `|add:".jpg"` adds `.jpg"` to the string, resulting in: `src="images/logo.jpg"`
+
+
+### Data attributes and hyphens
+
+Since Django template tags cannot accept attributes with hyphens (`-`) directly, you can use **underscores** (`_`) instead.
+The `optimized_image` tag will automatically convert underscores in attribute names to hyphens in the rendered HTML.
+
+**Example:**
+
+
+    {% optimized_image src="images/logo.jpg" class="img-fluid" data_bs_toggle="modal" data_bs_target="#exampleModal" %}
+
+This will render:
+
+    <picture>
+        <source srcset="/static/images/logo.webp" type="image/webp">
+        <img src="/static/images/logo.jpg" class="img-fluid" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    </picture>
