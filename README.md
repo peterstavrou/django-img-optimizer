@@ -135,7 +135,7 @@ src is set to: `src="images/`
 
 ### Data attributes and hyphens
 
-Since Django template tags cannot accept attributes with hyphens (`-`) directly, you can use **underscores** (`_`) instead.
+Since Django template tags cannot accept attributes with hyphens (`-`) directly, you can use underscores (`_`) instead.
 The `optimized_image` tag will automatically convert underscores in attribute names to hyphens in the rendered HTML.
 
 **Example:**
