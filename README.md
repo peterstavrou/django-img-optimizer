@@ -6,9 +6,9 @@ Django Image Optimizer generates AVIF and WebP alternatives for static JPEG and 
 
 ## Requirements
 
-- Python 3.9+
+- Python 3.11+
 - Django 4.2+
-- Pillow 11.3+ with AVIF and WebP support
+- Pillow 13.0+ with AVIF and WebP support
 
 ## Installation
 
@@ -107,3 +107,7 @@ Use underscores for hyphenated HTML attributes. The tag converts them safely:
 ```
 
 This renders `data-bs-toggle` and `data-bs-target` on the `<img>` element.
+
+## Author
+
+Created by [Peter Stavrou](https://peterstavrou.com/).
