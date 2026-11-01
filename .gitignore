@@ -3,6 +3,10 @@ notes.md
 
 # Django
 __pycache__
+.pytest_cache/
+
+# Generated image tracking
+**/.django-img-optimizer.json
 
 # Environment
 venv/

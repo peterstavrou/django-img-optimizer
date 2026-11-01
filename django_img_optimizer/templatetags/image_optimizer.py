@@ -1,63 +1,59 @@
-from django import template
-from django.templatetags.static import static
-from django.utils.safestring  import mark_safe
-from django.contrib.staticfiles.finders import find
 from pathlib import Path
+
+from django import template
+from django.contrib.staticfiles.finders import find
+from django.templatetags.static import static
+from django.utils.html import format_html, format_html_join
+from django.utils.safestring import mark_safe
+
+from django_img_optimizer.utils import OUTPUT_FORMATS
 
 
 register = template.Library()
 
+
 @register.simple_tag()
 def optimized_image(**attrs):
-    """
-    Returns:
-        str: An HTML <picture> tag with an optimized WebP image if available, or just the original image if not.
+    """Return a picture element with AVIF, WebP, and original fallbacks."""
 
-    Args:
-        **attrs: Keyword arguments representing the attributes for the image tag.
-    """
-
-    # Ensure src is provided
+    # Ensure src is provided.
     relative_image_path = attrs.get('src')
     if not relative_image_path:
-        return '<!-- optimized_image tag missing "src" attribute -->'
+        return mark_safe('<!-- optimized_image tag missing "src" attribute -->')
 
-    # Build Path object from src
-    relative_path = Path(relative_image_path)
+    # Build the relative source and static URL paths.
+    relative_path = Path(str(relative_image_path))
+    attrs['src'] = static(relative_path.as_posix())
 
-    # Prepare paths
-    relative_image_path_without_extension = str(relative_path.with_suffix(''))  # Remove file extension
-    image_static_src = static(relative_image_path)  # Get full static URL for original image
-
-    # Replace src attribute with Django static URL
-    attrs['src'] = image_static_src
-
-    # Check if optimized WebP image exists
-    optimized_image_webp_absolute_path = find(f'{relative_image_path_without_extension}.webp')
-
-    if optimized_image_webp_absolute_path:
-        optimized_image_static_src = static(f'{relative_image_path_without_extension}.webp').replace('%5C', '/') # Replace to fix Windows backslashes (%5C) in static URLs for proper web formatting.
-        optimized_image_webp = f'<source srcset="{optimized_image_static_src}" type="image/webp">'
-    else:
-        optimized_image_webp = ''
-
-    # Create alt and/or title attribute using image name
+    # Create alt and/or title attributes from the filename.
     if attrs.get('alt') == 'auto' or attrs.get('title') == 'auto':
-        image_name = relative_path.stem.replace('-', ' ').title()  # Get filename without extension
+        image_name = relative_path.stem.replace('-', ' ').replace('_', ' ').title()
         for key in ['alt', 'title']:
             if attrs.get(key) == 'auto':
                 attrs[key] = image_name
 
-    # Build HTML attributes for the <img> tag (converts underscores in keys to hyphens for HTML)
-    attributes_output = ' '.join(
-        f'{key.replace("_", "-")}="{value}"' for key, value in attrs.items()
+    # Build safe HTML attributes and convert underscores to hyphens.
+    attributes_output = format_html_join(
+        ' ',
+        '{}="{}"',
+        ((key.replace('_', '-'), value) for key, value in attrs.items()),
     )
 
-    # Build full <picture> tag
-    picture_tag = f'''
-    <picture>
-        {optimized_image_webp}
-        <img {attributes_output}>
-    </picture>
-    '''
-    return mark_safe(picture_tag)
+    source_tags = []
+    for output_format, output_settings in OUTPUT_FORMATS.items():
+        optimized_image_path = relative_path.with_suffix(f'.{output_format}').as_posix()
+        if find(optimized_image_path):
+            source_tags.append(
+                format_html(
+                    '<source srcset="{}" type="{}">',
+                    static(optimized_image_path),
+                    output_settings['mime_type'],
+                )
+            )
+
+    picture_content = format_html_join(
+        '\n',
+        '{}',
+        ((tag,) for tag in [*source_tags, format_html('<img {}>', attributes_output)]),
+    )
+    return format_html('<picture>\n{}\n</picture>', picture_content)
